@@ -64,4 +64,3 @@ class PersonChoice(models.Model):
 		# 	# on Update
         #     do_something()
         return super(PersonChoice, self).save(*args, **kwargs)
-
