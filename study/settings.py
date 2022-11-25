@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'orm_study',
     'django_extensions',
     'django_seed',
-    'get_update_create_study'
+    'get_update_create_study',
+    'rest_framework',
+    'snippets_study',
 ]
 
 MIDDLEWARE = [
