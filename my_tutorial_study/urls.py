@@ -1,7 +1,7 @@
 from django.urls import path
-from my_tutorial_study.views import book_get_post, book_detail
+from my_tutorial_study.views import BookAPI
 
 urlpatterns = [
-    path('book/', book_get_post),
-    path('book/<int:pk>/', book_detail),
+    path('book/', BookAPI.as_view()),
+    # path('book/<int:pk>/', DetailBookAPI.as_view()),
 ]

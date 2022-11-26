@@ -1,20 +1,18 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from my_tutorial_study.models import Book
 from my_tutorial_study.serializers import BookModelSerializer, BookSchema
+from django.http import Http404
 
-@api_view(["GET", "POST"])
-def book_get_post(request):
-    """
-    모든 book_list를 출력한다.
-    """
-    if request.method == 'GET':
-        books = Book.objects.all()
+
+class BookAPI(APIView):
+    def get(self, requets):
+        books = Book.objects.all()        
         serializer = BookModelSerializer(books, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    def post(self, request):
         data = request.data
         serializer = BookModelSerializer(data=data)
         if serializer.is_valid():
@@ -22,21 +20,20 @@ def book_get_post(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def book_detail(request, pk):
-    """
-    특정 객체에 대한 조회, 업데이트, 삭제
-    """
-    try:
-        book = Book.objects.get(pk=pk)
-    except Book.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class DetailBookAPI(APIView):
+    def get_object(self, pk):
+        try:
+            return Book.objects.get(pk=pk)
+        except:
+            raise Http404
 
-    if request.method == 'GET':
+    def get(self, request, pk):
+        book = self.get_object(pk)
         serializer = BookModelSerializer(book)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
+    def put(self, request, pk):
+        book = self.get_object(pk)
         data = request.data
         serializer = BookModelSerializer(book, data=data, partial=True) # serializer에 객체와 데이터를 모두 넘겨준다.
         if serializer.is_valid():
@@ -44,46 +41,41 @@ def book_detail(request, pk):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, pk):
+        book = self.get_object(pk)
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
-@api_view(["GET", "POST"])
-def book_get_post(request):
-    """
-    모든 book_list를 출력한다.
-    """
-    if request.method == 'GET':
+class BookAPI(APIView):
+    def get(self, request):
         books = Book.objects.all()
         serializer = BookSchema(books, many=True)
         return Response(serializer.data)
-
-    elif request.method == 'POST':
+    
+    def post(self, request):
         data = request.data
         serializer = BookSchema(data=data)
         if serializer.is_valid():
             serializer.create(**serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET", "PUT", "DELETE"])
-def book_detail(request, pk):
-    """
-    특정 객체에 대한 조회, 업데이트, 삭제
-    """
-    try:
-        book = Book.objects.get(pk=pk)
-    except Book.DoesNotExist:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+class DetailBookAPI(APIView):
+    def get_object(self, pk):
+        try:
+            return Book.objects.get(pk=pk)
+        except Book.DoesNotExist:
+            raise Http404
 
-    if request.method == 'GET':
-        serializer = BookSchema(book)
+    def get(self, request, pk):
+        book = self.get_object(pk)
+        serializer = BookSchema(book) 
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
+    def put(self, request, pk):
+        book = self.get_object(pk)
         data = request.data
         serializer = BookSchema(book, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
@@ -91,6 +83,8 @@ def book_detail(request, pk):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == 'DELETE':
+    def delete(self, request, pk):
+        book = self.get_object(pk)
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
