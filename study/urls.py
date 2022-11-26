@@ -20,5 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("user/", include("orm_study.urls")),
     path("getcreate/", include("get_update_create_study.urls")),
-    path("snippets/", include("snippets_study.urls"))
+    path("snippets/", include("snippets_study.urls")),
+    path("drf/", include("my_tutorial_study.urls")),
 ]
