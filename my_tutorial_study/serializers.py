@@ -1,21 +1,20 @@
 from rest_framework import serializers
 from my_tutorial_study.models import Book
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.settings import api_settings
-
+from django.contrib.auth.models import User
 
 
 class BookModelSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source="user.name")
     class Meta:
         model = Book
-        fields = "__all__"
+        fields = "title", "author","price","user"
 
 
 class BookSchema(serializers.Serializer):
     title = serializers.CharField(max_length=10)
     author = serializers.CharField(max_length=10)
     price = serializers.IntegerField()
+    user = serializers.ReadOnlyField(source="user.name")
 
     """ create 재정의 """
     def create_a(self, **validated_data):
@@ -28,3 +27,11 @@ class BookSchema(serializers.Serializer):
         price = instance.price = validated_data.get("price", instance.price)
         instance.save()
         return instance
+
+
+class UserSerializer(serializers.ModelSerializer):
+    books = serializers.PrimaryKeyRelatedField(many=True, queryset=Book.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'books']

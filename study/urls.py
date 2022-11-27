@@ -23,3 +23,7 @@ urlpatterns = [
     path("snippets/", include("snippets_study.urls")),
     path("drf/", include("my_tutorial_study.urls")),
 ]
+
+urlpatterns += [
+    path('api-auth/', include('rest_framework.urls')),
+]
