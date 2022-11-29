@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'snippets_study',
     'my_tutorial_study',
     'base_study',
+    'layer_study',
 
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',

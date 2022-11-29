@@ -22,7 +22,8 @@ urlpatterns = [
     path("getcreate/", include("get_update_create_study.urls")),
     path("snippets/", include("snippets_study.urls")),
     path("drf/", include("my_tutorial_study.urls")),
-    path("api/", include("base_study.api.urls"))
+    path("api/", include("base_study.api.urls")),
+    path("layer/", include("layer_study.urls"))
 ]
 
 urlpatterns += [
