@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'my_tutorial_study',
     'base_study',
     'layer_study',
-
+    'customquery_study',
+    
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
